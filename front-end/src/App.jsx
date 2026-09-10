@@ -20,11 +20,13 @@ const App = () => {
             <div>
                 <Routes>
                     <Route path="/" element={<Dashboard />} />
+                    <Route path="/transactions" element={<Transactions/>} />
+                    <Route path="/Transfer" element={<Transfer />} />
+                    <Route path="/profile" element={<Profile/>} />
                     <Route path="/Deposit" element={<ProtectedRoute><Deposit /></ProtectedRoute>} />
-                    <Route path="/MyCard" element={<ProtectedRoute><MyCard /></ProtectedRoute>} />
+                    <Route path="/myCard" element={<MyCard /> }/>
                     <Route path="/Notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
                     <Route path="/Profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                    <Route path="/Transfer" element={<Transfer />} />
                     <Route path="/Transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
                     <Route path="/Verifydeposit" element={<ProtectedRoute><VerifyDeposit /></ProtectedRoute>} />
                     <Route path="/Login" element={<Login />} />
