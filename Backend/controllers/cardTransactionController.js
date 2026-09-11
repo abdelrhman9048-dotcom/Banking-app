@@ -1,7 +1,7 @@
-import Card from "../models/Card.js"
-import User from "../models/User.js"
-import Transaction from "../models/Transaction.js"
-import Notification from "../models/Notification.js"
+import Card from "../Model/Cards.js"
+import User from "../Model/User.js"
+import Transaction from "../Model/Transaction.js"
+import Notification from "../Model/Notifications.js"
 
 export const depositToCard = async(req,res)=>{
     const {amount} = req.body

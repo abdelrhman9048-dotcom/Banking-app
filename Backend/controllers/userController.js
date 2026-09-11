@@ -1,5 +1,5 @@
-import User from "../models/User.js";
-import Card from "../models/Card.js";
+import User from "../Model/User.js";
+import Card from "../Model/Cards.js";
 
 export const getMe = async (req, res) => {
     try {

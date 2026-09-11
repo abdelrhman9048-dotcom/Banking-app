@@ -1,27 +1,56 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Send, Mail, DollarSign } from "lucide-react";
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { Send, Mail, DollarSign } from "lucide-react"
+// axios للتواصل مع الباك-إند
+import axios from "axios"
 
 export default function Transfer() {
-    const [email, setEmail] = useState("");
-    const [amount, setAmount] = useState("");
-    const [msg, setMsg] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState("")
+    const [amount, setAmount] = useState("")
+    const [msg, setMsg] = useState("")
+    const [loading, setLoading] = useState(false)
 
-    const handleTransfer = (e) => {
-        e.preventDefault();
+    //  دالة التحويل الحقيقية المرتبطة بالسيرفر
+    const handleTransfer = async (e) => {
+        e.preventDefault()
+        
         if (!email || !amount) {
-            alert("الرجاء إدخال البريد والمبلغ");
-            return;
+            setMsg("الرجاء إدخال البريد والمبلغ ⚠️")
+            return
         }
-        setLoading(true);
-        setTimeout(() => {
-            alert(`تم تحويل ${amount} بنجاح إلى ${email}`);
-            setLoading(false);
-            setEmail("");
-            setAmount("");
-        }, 1000);
-    };
+
+        try {
+            setLoading(true)
+            
+            // 1. جلب التوكن (ضروري للـ Protected Route)
+            const token = localStorage.getItem("token")
+            
+            //إرسال الطلب للباك )
+            const { data } = await axios.post(
+                "/transfer", 
+                {
+                    receiverEmail: email,
+                    amount: Number(amount) // تحويل المبلغ لرقم
+                },
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            )
+
+            // 3. عرض رسالة النجاح الجاية من السيرفر
+            setMsg(data.message || "تم التحويل بنجاح ✅")
+            setEmail("")
+            setAmount("")
+            
+        } catch (err) {
+            // 4. التعامل مع الأخطاء (رصيد غير كاف، مستخدم غير موجود)
+            setMsg(err.response?.data?.message || "حدث خطأ أثناء التحويل ❌")
+            
+        } finally {
+            // إيقاف حالة التحميل سواء نجح أو فشل
+            setLoading(false)
+        }
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#3a0078] to-[#1a237e] p-6">
@@ -48,6 +77,14 @@ export default function Transfer() {
 
                 {/* النموذج */}
                 <form onSubmit={handleTransfer} className="space-y-6">
+                    
+                    {/*  إضافة مكان لعرض رسائل النجاح أو الخطأ بدل الـ alert */}
+                    {msg && (
+                        <div className={`text-center p-3 rounded-xl ${msg.includes("✅") ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}`}>
+                            {msg}
+                        </div>
+                    )}
+
                     {/* حقل البريد الإلكتروني */}
                     <div className="flex items-center gap-3 bg-white/10 p-4 rounded-xl border border-white/10 focus-within:border-green-400 transition">
                         <Mail className="text-gray-300" />
@@ -76,12 +113,12 @@ export default function Transfer() {
                     <button 
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 py-3.5 rounded-xl font-bold text-white shadow-lg transition"
+                        className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 py-3.5 rounded-xl font-bold text-white shadow-lg transition disabled:opacity-50"
                     >
                         {loading ? "جاري التحويل..." : "إتمام التحويل"}
                     </button>
                 </form>
             </motion.div>
         </div>
-    );
+    )
 }

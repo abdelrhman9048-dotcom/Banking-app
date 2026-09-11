@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import Admin from "../models/Admin.js"
+import Admin from "../Model/Admin.js"
 
 const generateToken = (id) =>
     jwt.sign({id,role:"admin"},process.env.JWT_SECRET,{expiresIn:"30d"})

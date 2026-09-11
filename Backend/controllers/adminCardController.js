@@ -1,5 +1,5 @@
-import Card from "../models/Card.js";
-import User from "../models/User.js";
+import Card from "../Model/Cards.js";
+import User from "../Model/User.js";
 
 export const getAllCards = async (req, res) => {
     const cards = await Card.find().populate("user", "name email")

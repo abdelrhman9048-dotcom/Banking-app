@@ -1,32 +1,29 @@
-import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { HiMenu, HiX } from "react-icons/hi";
-import { Bell } from "lucide-react";
-import { LayoutDashboard, Users, CreditCard, Receipt, LogOut, Menu, X } from "lucide-react";
+import { useContext, useState } from "react" //  إضافة useContext
+import { useLocation, Link } from "react-router-dom"
+import { motion, AnimatePresence } from "framer-motion"
+import { Bell, Menu, X } from "lucide-react" //  استبدال HiMenu/HiX بأيقونات lucide
+import { AuthContext } from "../context/AuthContext"
 
-export default function Header({ onLogout }) {
-    const location = useLocation();
-    const [menuOpen, setMenuOpen] = useState(false);
+export default function Header() {
+    const location = useLocation()
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    
+    //   ربط الهيدر بالـ Context
+    const { user, logout } = useContext(AuthContext)
 
-    // افتراض مؤقت لتجنب الأخطاء إذا لم تقومي بربط الـ Auth بعد
-    const user = true; // اجعليها false إذا أردتِ اختبار حالة عدم تسجيل الدخول
-    const logout = () => {
-        console.log("Logged out");
-    };
-
-    const links = [
-        { name: "الرئيسيه", icon: <LayoutDashboard size={18}/> , path: "/" },
-        { name: "المعاملات", icon: <Receipt size={18}/>, path: "/Transactions" },
-        { name: "المستخدمون", icon: <Users size={18}/>, path: "/users" },
-        { name: "البطاقات", icon: <CreditCard size={18}/>, path: "/cards" },
-        // { path: "/Profile", label: "الملف الشخصي" },
-    ];
+    //  تصحيح المسارات لتكون Small Letters زي الـ Router
+    const navlinks = [
+        { path: "/", label: "الرئيسية" },
+        { path: "/transactions", label: "المعاملات" },
+        { path: "/transfer", label: "التحويل" },
+        { path: "/profile", label: "الملف الشخصي" },
+        { path: "/mycard", label: "بطاقتي" },
+    ]
 
     return (
         <motion.div 
             initial={{ y: -50, opacity: 0 }} 
-            animate={{ y: 0, opacity: 1 }}  
+            animate={{ y: 0, opacity: 1 }} 
             transition={{ duration: 0.6 }}
             className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-white/10 border-b border-white/20 shadow-lg"
         >
@@ -64,7 +61,7 @@ export default function Header({ onLogout }) {
                             ))}
 
                             {/* أيقونة الإشعارات */}
-                            <Link to="/Notifications" className="relative group">
+                            <Link to="/notifications" className="relative group">
                                 <motion.div 
                                     whileHover={{ scale: 1.15, rotate: 10 }} 
                                     whileTap={{ scale: 0.95 }}
@@ -84,11 +81,11 @@ export default function Header({ onLogout }) {
                         </>
                     ) : (
                         <>
-                            <Link to="/Login" className="text-gray-200 hover:text-yellow-300 transition-all">
+                            <Link to="/login" className="text-gray-200 hover:text-yellow-300 transition-all">
                                 تسجيل الدخول
                             </Link>
                             <Link 
-                                to="/Register" 
+                                to="/register" 
                                 className="bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-1.5 rounded-full font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all"
                             >
                                 إنشاء حساب
@@ -100,7 +97,7 @@ export default function Header({ onLogout }) {
                 {/* أيقونة القائمة للموبايل */}
                 <div className="md:hidden flex items-center gap-3">
                     {user && (
-                        <Link to="/Notifications" className="relative">
+                        <Link to="/notifications" className="relative">
                             <motion.div 
                                 whileTap={{ scale: 0.9 }}
                                 className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all relative"
@@ -114,7 +111,8 @@ export default function Header({ onLogout }) {
                         onClick={() => setIsMobileMenuOpen((prev) => !prev)}
                         className="text-white text-2xl focus:outline-none"
                     >
-                        {isMobileMenuOpen ? <HiX /> : <HiMenu />}
+                        {/* ✅ استخدام أيقونات Lucide الصحيحة */}
+                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
                 </div>
             </div>
@@ -145,7 +143,7 @@ export default function Header({ onLogout }) {
                                         </Link>
                                     ))}
                                     <button 
-                                        onClick={logout} 
+                                        onClick={() => { logout(); setIsMobileMenuOpen(false); }} 
                                         className="mt-2 bg-gradient-to-r from-red-500 to-red-600 px-4 py-2 rounded-lg text-center"
                                     >
                                         تسجيل الخروج
@@ -153,10 +151,10 @@ export default function Header({ onLogout }) {
                                 </>
                             ) : (
                                 <>
-                                    <Link to="/Login" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-200 hover:text-yellow-300">
+                                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-gray-200 hover:text-yellow-300">
                                         تسجيل الدخول
                                     </Link>
-                                    <Link to="/Register" onClick={() => setIsMobileMenuOpen(false)} className="bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 rounded-full text-center">
+                                    <Link to="/register" onClick={() => setIsMobileMenuOpen(false)} className="bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2 rounded-full text-center">
                                         إنشاء حساب
                                     </Link>
                                 </>
@@ -166,5 +164,5 @@ export default function Header({ onLogout }) {
                 )}
             </AnimatePresence>
         </motion.div>
-    );
+    )
 }

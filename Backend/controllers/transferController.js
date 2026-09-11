@@ -1,6 +1,6 @@
-import Transaction from "../models/Transaction.js"
-import User from "../models/User.js"
-import Notification from "../models/Notification.js"
+import Transaction from "../Model/Transaction.js"
+import User from "../Model/User.js"
+import Notification from "../Model/Notifications.js"
 
 export const transfer = async(req,res)=>{
     const{receiverEmail ,amount} = req.body
