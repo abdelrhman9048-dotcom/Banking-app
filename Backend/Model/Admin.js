@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
@@ -10,12 +9,11 @@ const adminSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 });
 
-adminSchema.pre("save", async function(next) {
-    if (!this.isModified("password")) return next();
-    
+adminSchema.pre("save", async function() {
+    if (!this.isModified("password")) return;
+
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
 });
 
 adminSchema.methods.matchPassword = async function(enteredPassword) {
@@ -23,6 +21,3 @@ adminSchema.methods.matchPassword = async function(enteredPassword) {
 };
 
 export default mongoose.model("Admin", adminSchema);
-
-
-

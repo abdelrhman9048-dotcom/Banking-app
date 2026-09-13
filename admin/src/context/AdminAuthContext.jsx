@@ -1,6 +1,7 @@
-import axios from "../api/axios"
+import { createContext, useState, useEffect } from "react";
+import axios from "../api/axios";
 
-export const AdminAuthContext = createContext()
+export const AdminAuthContext = createContext();
 
 export const AdminAuthProvider = ({ children }) => {
     const [admin, setAdmin] = useState(null)
