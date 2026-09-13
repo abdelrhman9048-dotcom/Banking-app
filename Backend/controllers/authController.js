@@ -49,10 +49,10 @@ export const login = async (req, res) => {
   try {
     const user = await User.findOne({ email });
 
-    if (
-      user &&
-      await user.matchpassword(password)
-    ) {
+  if (
+    user &&
+    await user.matchPassword(password)
+) {
       res.json({
         _id: user._id,
         name: user.name,

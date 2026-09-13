@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 import {
     LayoutDashboard,
@@ -8,12 +8,18 @@ import {
     Receipt,
     LogOut,
     Menu,
-    X 
+    X
 } from "lucide-react";
 
 export default function Header({ onLogout }) {
     const location = useLocation();
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const handleLogout = () => {
+        onLogout();
+        navigate("/login");
+    };
 
     const links = [
         {
@@ -55,10 +61,11 @@ export default function Header({ onLogout }) {
                         <Link
                             key={link.path}
                             to={link.path}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${location.pathname === link.path
+                            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${
+                                location.pathname === link.path
                                     ? "bg-white/20 shadow-md"
                                     : "hover:bg-white/10"
-                                }`}
+                            }`}
                         >
                             {link.icon}
 
@@ -69,8 +76,9 @@ export default function Header({ onLogout }) {
                     ))}
                 </nav>
 
+                {/* Desktop Logout */}
                 <button
-                    onClick={onLogout}
+                    onClick={handleLogout}
                     className="hidden md:flex items-center gap-2 bg-red-500 hover:bg-red-600 transition px-4 py-2 rounded-lg shadow"
                 >
                     <LogOut size={18} />
@@ -80,7 +88,7 @@ export default function Header({ onLogout }) {
                     </span>
                 </button>
 
-
+                {/* Mobile Menu Button */}
                 <button
                     onClick={() => setMenuOpen(!menuOpen)}
                     className="md:hidden flex items-center justify-center p-2 rounded-lg hover:bg-white/10 transition"
@@ -94,6 +102,7 @@ export default function Header({ onLogout }) {
 
             </div>
 
+            {/* Mobile Menu */}
             {menuOpen && (
                 <div className="md:hidden bg-linear-to-b from-indigo-800 text-white shadow-lg">
 
@@ -104,10 +113,11 @@ export default function Header({ onLogout }) {
                                 key={link.path}
                                 to={link.path}
                                 onClick={() => setMenuOpen(false)}
-                                className={`flex items-center gap-3 px-3 py-3 rounded-lg transition ${location.pathname === link.path
+                                className={`flex items-center gap-3 px-3 py-3 rounded-lg transition ${
+                                    location.pathname === link.path
                                         ? "bg-white/20 shadow-md"
                                         : "hover:bg-white/10"
-                                    }`}
+                                }`}
                             >
                                 {link.icon}
 
@@ -121,7 +131,7 @@ export default function Header({ onLogout }) {
                         <button
                             onClick={() => {
                                 setMenuOpen(false);
-                                onLogout();
+                                handleLogout();
                             }}
                             className="flex items-center gap-3 bg-red-500 hover:bg-red-600 transition px-3 py-3 rounded-lg mt-2"
                         >

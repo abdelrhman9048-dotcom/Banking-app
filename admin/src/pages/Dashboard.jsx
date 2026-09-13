@@ -56,7 +56,7 @@ const Dashboard = () => {
     },
     {
       title: "الإعدادات",
-      value: stats.cards,
+      value: "لوحة التحكم",
       icon: <Settings size={28} className="text-blue-400" />,
       color: "from-purple-500/20 to-purple-600/10",
     },
